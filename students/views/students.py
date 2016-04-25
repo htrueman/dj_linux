@@ -15,9 +15,9 @@ def students_list(request):
             students = students.reverse()
     #paginate students
     paginator = Paginator(students, 3)
-    request = request.GET.get('page')
+    page = request.GET.get('page')
     try:
-        students = paginator.page('page')
+        students = paginator.page(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
         students = paginator.page(1)
