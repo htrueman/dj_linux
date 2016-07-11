@@ -16,13 +16,14 @@
     <tr>
       <th><a href="#">#</a></th>
       <th>Фото</th>
-      <th><a href="{% url "home" %}?order_by=last_name{% if order_by == 'last_name' and reverse != '1' %}
-      &amp;reverse=1{% endif %}">
-          Прізвище
-          {% if order_by == 'last_name' and reverse != '1' %}&uarr;
-              {% elif order_by == 'last_name' and reverse == '1' %}&darr;
-          {% endif %}
-          &uarr;</a></th>
+    <th>
+    <a href="{% url "home" %}?order_by=last_name{% if order_by == 'last_name' and reverse != '1' %}&amp;reverse=1{% endif %}">
+    Прізвище
+    {% if order_by == 'last_name' and reverse != '1' %}&uarr;
+    {% elif order_by == 'last_name' and reverse == '1' %}&darr;
+    {% endif %}
+    </a>
+    </th>
       <th>
     <a href="{% url "home" %}?order_by=first_name{% if order_by == 'first_name' and reverse != '1' %}&amp;reverse=1{% endif %}">
         Ім'я
@@ -30,13 +31,14 @@
     {% elif order_by == 'first_name' and reverse == '1' %}&darr;
     {% endif %}
     </th>
-      <th><a href="{% url "home" %}?order_by=ticket{% if order_by == 'ticket' and reverse != '1' %}
-      &amp;reverse=1{% endif %}">
-          № Білету
-      {% if order_by == 'ticket' and reverse != '1' %}&uarr;
-      {% elif order_by == 'ticket' and reverse == '1' %}&darr;
-      {% endif %}
-      </a></th>
+ <th>
+    <a href="{% url "home" %}?order_by=ticket{% if order_by == 'ticket' and reverse != '1' %}&amp;reverse=1{% endif %}">
+    № Білету
+    {% if order_by == 'ticket' and reverse != '1' %}&uarr;
+    {% elif order_by == 'ticket' and reverse == '1' %}&darr;
+    {% endif %}
+    </a>
+    </th>
       <th>Дії</th>
     </tr>
   </thead>
@@ -46,14 +48,14 @@
     <tr>
       <td>{{ forloop.counter }}</td>
     <td>
-        {% if student.photo %}
-      <img class="img-circle" src="{{ student.image.url }}" height="30" width="30" />
-            {% else %}
-            <img class="img-circle" src="{% static "img/default.jpg" %}" height="30" width="30" />
-        {% endif %}
+    {% if student.photo %}
+    <img class="img-circle" src="{{ student.photo.url }}" height="30" width="30" />
+    {% else %}
+    <img class="img-circle" src="{% static "img/one.png" %}" height="30" width="30" />
+    {% endif %}
     </td>
-      <td><a href="{% url "students_edit" student.id %}"/> {{ student.last_name }}</td>
-      <td><a href="{% url "students_edit" student.id %}"/> {{ student.first_name }}</td>
+      <td><a href="{% url "students_edit" student.id %}" class="student-edit-form-link"/>{{ student.last_name }}</td>
+      <td><a href="{% url "students_edit" student.id %}" class="student-edit-form-link"/>{{ student.first_name }}</td>
       <td>{{ student.ticket }}</td>
       <td>
         <div class="btn-group">
@@ -62,10 +64,10 @@
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="{% url "students_edit" student.id %}">Редагувати</a></li>
-            <li><a href="/journal/{{ student.id }}">Відвідування</a></li>
+            <li><a href="{% url "students_edit" student.id %}" class="student-edit-form-link">Редагувати</a></li>
+            <li><a href="{% url "m_journal" %}">Відвідування</a></li>
             <li><a href="{% url "students_delete" student.id %}">Видалити</a></li>
-          </ul>
+            </ul>
         </div>
       </td>
     </tr>
@@ -76,6 +78,7 @@
 <!-- End Students Listing -->
 
     {% if students.has_other_pages %}
+        {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
     <nav>
     <ul class="pagination">
     <li><a href="{% url "home" %}?page=1">&laquo;</a></li>
@@ -90,6 +93,6 @@
     </li>
     </ul>
     </nav>
+        {% endwith %}
     {% endif %}
-        
 {% endblock content %}
