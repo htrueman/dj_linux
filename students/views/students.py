@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.forms import ModelForm
 from django.views.generic import UpdateView, DeleteView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -41,6 +43,7 @@ def students_list(request):
         {'students': students})
 
 
+@login_required
 def students_add(request):
     # was form posted?
     if request.method == "POST":
@@ -156,6 +159,10 @@ class StudentUpdateView(UpdateView):
     template_name = 'students/students_edit.html'
     form_class = StudentUpdateForm
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StudentUpdateView, self).dispatch(*args, **kwargs)
+
     def get_success_url(self):
         return u'%s?status_message=Студента успішно збережено!' % reverse('home')
 
@@ -170,6 +177,10 @@ class StudentUpdateView(UpdateView):
 class StudentDeleteView(DeleteView):
     model = Student
     template_name = 'students/students_confirm_delete.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(StudentDeleteView, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
         return u'%s?status_message=Студента успішно видалено!' % reverse('home')

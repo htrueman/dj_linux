@@ -42,11 +42,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'crispy_forms',
     'registration',
-    'students'
+    'social.apps.django_app.default',
+    'students',
+    'studentsdb',
+    'students.templatetags',
 )
 
 MIDDLEWARE_CLASSES = (
+    'studentsdb.middleware.RequestTimeMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -103,6 +108,8 @@ EMAIL_USE_SSL = False
 TEMPLATE_CONTEXT_PROCESSORS = \
     global_settings.TEMPLATE_CONTEXT_PROCESSORS + [
     "django.core.context_processors.request",
+    "social.apps.django_app.context_processors.backends",
+    "social.apps.django_app.context_processors.login_redirect",
     "studentsdb.context_processors.students_proc",
     "students.context_processors.groups_processor",
 ]
@@ -120,6 +127,9 @@ TEMPLATES = [
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
+
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.i18n',
@@ -132,10 +142,20 @@ TEMPLATES = [
     },
 ]
 
+LOGIN_URL = 'users:auth_login'
+LOGOUT_URL = 'users:auth_logout'
 
+AUTHENTICATION_BACKENDS = (
+    'social.backends.vk.VKOAuth2',
+    'social.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
+SOCIAL_AUTH_FACEBOOK_KEY = '1217160841657121'
+SOCIAL_AUTH_FACEBOOK_SECRET = '3d15bc0e616784a6f1bd3449b28460a5'
 
-
+SOCIAL_AUTH_VK_OAUTH2_KEY = '5545307'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'yiEU7DlvVXpN8pDqhPEx'
 
 
 

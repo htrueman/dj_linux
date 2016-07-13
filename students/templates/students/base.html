@@ -42,12 +42,14 @@
 </div>
 <!-- User's toolbar for authenticated users -->
 <div class="col-xs-2" id="user-toolbar">
-<span>{{ user.username }}</span> |
+<a href="{% url "profile" %}">{{ user.get_full_name|default:user.username }}</a> |
 <a href="{% url "users:auth_logout" %}">Вийти</a>
 </div>
 {% else %}
 <!-- User's toolbar for anonymous users -->
 <div class="col-xs-6" id="user-toolbar">
+<a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Facebook</a> |
+<a href="{% url 'social:begin' 'vk-oauth2' %}?next={{ request.path }}">vk.com</a> |
 <a href="{% url "users:auth_login" %}">Увійти</a> |
 <a href="{% url "users:registration_register" %}">Зареєстуватися</a>
 </div>
@@ -56,14 +58,18 @@
 <!-- End Header -->
 
     <!-- Start subheader -->
-    <div class="row" id="sub-header"> 
+    <div class="row" id="sub-header">
       <div class="col-xs-12">
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" {% if request.path == '/' %}class="active"{% endif %}><a href="{% url "home" %}">Студенти</a></li>
-          <li role="presentation" {% if '/journal' in request.path %}class="active"{% endif %}><a href="{% url "m_journal" %}">Відвідування</a></li>
-          <li role="presentation" {% if '/groups' in request.path %}class="active"{% endif %}><a href="{% url "groups" %}">Групи</a></li>
-          <li role="presentation" {% if '/contact-admin' in request.path %}class="active"{% endif %}>
+            {% if user.is_authenticated %}
+                <li role="presentation" {% if '/journal' in request.path %}class="active"{% endif %}><a href="{% url "m_journal" %}">Відвідування</a></li>
+                <li role="presentation" {% if '/groups' in request.path %}class="active"{% endif %}><a href="{% url "groups" %}">Групи</a></li>
+            {% endif %}
+            {% if perms.auth.add_user %}
+            <li role="presentation" {% if '/contact-admin' in request.path %}class="active"{% endif %}>
                 <a href="{% url "contact_admin" %}">Зворотній зв’язок</a></li>
+            {% endif %}
         </ul>
       </div>
     </div>
@@ -82,7 +88,7 @@
 </div>
 </div>
     <!-- End Content Columns -->
-    
+
     <!-- Start Footer -->
     <div class="row" id="footer">
       <div class="col-xs-12">

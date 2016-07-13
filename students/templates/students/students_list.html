@@ -1,5 +1,5 @@
 {% extends "students/base.html" %}
-
+{% load pagenav %}
 {% load static from staticfiles %}
 
 {% block meta_title %}Студенти{% endblock meta_title %}
@@ -7,7 +7,9 @@
 {% block title %}База Студентів{% endblock title %}
 
 {% block content %}
+    {% if perms.auth.add_user %}
 <a href="{% url "students_add" %}" class="btn btn-primary">Додати Студента</a>
+    {% endif %}
 
 <!-- Start Students Listing -->
 <table class="table">
@@ -77,22 +79,5 @@
 </table>
 <!-- End Students Listing -->
 
-    {% if students.has_other_pages %}
-        {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
-    <nav>
-    <ul class="pagination">
-    <li><a href="{% url "home" %}?page=1">&laquo;</a></li>
-        {% for p in students.paginator.page_range %}
-    <li {% if students.number == p %}class="active"{% endif %}>
-        <a href="{% url "home" %}?page={{ p }}">{{ p }}</a>
-    </li>
-        {% endfor %}
-    <li>
-        <a href="{% url "home" %}?page={{ students.paginator.num_pages}}">
-        &raquo;</a>
-    </li>
-    </ul>
-    </nav>
-        {% endwith %}
-    {% endif %}
+    {% pagenav students is_paginated paginator %}
 {% endblock content %}
